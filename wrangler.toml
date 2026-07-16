@@ -1,0 +1,11 @@
+name = "waxum-studio"
+compatibility_date = "2026-07-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "waxum-studio"
+database_id = "PLACEHOLDER_CREATE_VIA_wrangler_d1_create"
+
+[vars]
+WAXUM_API_BASE = "https://waxum.imtaqin.id"

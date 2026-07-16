@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html, body, #app {
+    height: 100%;
+  }
+}
+
+/* Vue Flow overrides — emerald accent */
+.vue-flow__handle {
+  background: #10b981 !important;
+  border: 2px solid #0a0f0d !important;
+  width: 10px !important;
+  height: 10px !important;
+}
+.vue-flow__edge-path {
+  stroke: #10b981 !important;
+  stroke-width: 2 !important;
+}
+.vue-flow__edge.selected .vue-flow__edge-path {
+  stroke: #34d399 !important;
+}
+.vue-flow__controls-button {
+  background: #0e1512 !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+  color: #cbd5d1 !important;
+}
+.vue-flow__minimap {
+  background: #0e1512 !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 8px !important;
+}
