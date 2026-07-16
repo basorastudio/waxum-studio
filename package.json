@@ -20,6 +20,14 @@
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "vue-demi",
+      "workerd"
+    ]
+  },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241224.0",
     "@types/node": "^22.10.5",

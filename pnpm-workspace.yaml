@@ -1,0 +1,10 @@
+allowBuilds:
+  esbuild: false
+  sharp: false
+  vue-demi: false
+  workerd: false
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - vue-demi
+  - workerd

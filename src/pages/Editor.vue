@@ -19,10 +19,15 @@ const edges = ref<any[]>([])
 const saving = ref(false)
 const flowName = ref('')
 
+interface LoadedFlow {
+  name?: string
+  graph?: { nodes?: any[]; edges?: any[] }
+}
+
 async function load() {
   const res = await fetch(`/api/flows/${props.id}`)
   if (!res.ok) return
-  const data = await res.json()
+  const data = (await res.json()) as LoadedFlow
   flowName.value = data.name || 'Untitled'
   if (data.graph) {
     nodes.value = data.graph.nodes || []
