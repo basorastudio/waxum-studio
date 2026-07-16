@@ -5,6 +5,7 @@ import './style.css'
 import App from './App.vue'
 import Home from './pages/Home.vue'
 import Editor from './pages/Editor.vue'
+import { OhVueIcon } from './icons'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,4 +15,8 @@ const router = createRouter({
   ],
 })
 
-createApp(App).use(createPinia()).use(router).mount('#app')
+createApp(App)
+  .component('v-icon', OhVueIcon)
+  .use(createPinia())
+  .use(router)
+  .mount('#app')

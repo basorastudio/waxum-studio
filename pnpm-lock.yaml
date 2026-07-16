@@ -23,6 +23,9 @@ importers:
       hono:
         specifier: ^4.6.14
         version: 4.12.30
+      oh-vue-icons:
+        specifier: ^1.0.0-rc3
+        version: 1.0.0-rc3(vue@3.5.39(typescript@5.7.3))
       pinia:
         specifier: ^2.3.0
         version: 2.3.1(typescript@5.7.3)(vue@3.5.39(typescript@5.7.3))
@@ -1174,6 +1177,15 @@ packages:
     resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
     engines: {node: '>= 6'}
 
+  oh-vue-icons@1.0.0-rc3:
+    resolution: {integrity: sha512-+k2YC6piK7sEZnwbkQF3UokFPMmgqpiLP6f/H0ovQFLl20QA5V4U8EcI6EclD2Lt5NMQ3k6ilLGo8XyXqdVSvg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
@@ -1439,6 +1451,17 @@ packages:
 
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
+
+  vue-demi@0.12.5:
+    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -2389,6 +2412,11 @@ snapshots:
 
   object-hash@3.0.0: {}
 
+  oh-vue-icons@1.0.0-rc3(vue@3.5.39(typescript@5.7.3)):
+    dependencies:
+      vue: 3.5.39(typescript@5.7.3)
+      vue-demi: 0.12.5(vue@3.5.39(typescript@5.7.3))
+
   ohash@2.0.11: {}
 
   path-browserify@1.0.1: {}
@@ -2676,6 +2704,10 @@ snapshots:
       jiti: 1.21.7
 
   vscode-uri@3.1.0: {}
+
+  vue-demi@0.12.5(vue@3.5.39(typescript@5.7.3)):
+    dependencies:
+      vue: 3.5.39(typescript@5.7.3)
 
   vue-demi@0.14.10(vue@3.5.39(typescript@5.7.3)):
     dependencies:
