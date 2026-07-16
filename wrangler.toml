@@ -5,7 +5,7 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "waxum-studio"
-database_id = "PLACEHOLDER_CREATE_VIA_wrangler_d1_create"
+database_id = "61ed5aad-a2e1-4aa8-9cf0-c07e2651d4fa"
 
 [vars]
 WAXUM_API_BASE = "https://waxum.imtaqin.id"
