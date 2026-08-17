@@ -91,15 +91,15 @@ watch([nodes, edges], () => scheduleSave(), { deep: true })
 </script>
 
 <template>
-  <div class="h-full flex bg-charcoal-900">
+  <div class="studio-editor h-full flex bg-charcoal-900">
     <NodePalette />
 
     <div class="flex-1 flex flex-col">
-      <header class="flex items-center justify-between h-14 px-4 border-b border-white/5 bg-charcoal-800/50 backdrop-blur">
+      <header class="editor-header flex items-center justify-between h-16 px-5">
         <div class="flex items-center gap-3">
           <router-link
             to="/"
-            class="inline-flex items-center gap-1 text-white/50 hover:text-white text-sm px-2 py-1 rounded hover:bg-white/5 transition">
+            class="secondary-button inline-flex items-center gap-1 text-sm px-2.5 py-1.5 rounded-lg">
             <v-icon name="bi-arrow-left" scale="0.9" />
             <span>Flows</span>
           </router-link>
@@ -109,10 +109,10 @@ watch([nodes, edges], () => scheduleSave(), { deep: true })
               <v-icon name="bi-diagram3" scale="0.75" />
             </div>
             <div class="text-sm font-semibold">{{ flowName }}</div>
-            <div class="text-[11px] text-white/30 font-mono">{{ id.slice(0, 8) }}</div>
+            <div class="hidden sm:block text-[10px] text-white/30 font-mono px-2 py-1 rounded-md bg-white/[0.03]">{{ id.slice(0, 8) }}</div>
           </div>
         </div>
-        <div class="flex items-center gap-1 text-xs">
+        <div class="save-state flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-full">
           <template v-if="saving">
             <v-icon name="bi-arrow-clockwise" class="text-emerald-500 animate-spin" scale="0.85" />
             <span class="text-white/50">Saving</span>
@@ -122,7 +122,7 @@ watch([nodes, edges], () => scheduleSave(), { deep: true })
             <span class="text-emerald-500">Saved</span>
           </template>
           <template v-else>
-            <span class="text-white/30">Auto-save on</span>
+            <span class="text-white/40">All changes saved</span>
           </template>
         </div>
       </header>

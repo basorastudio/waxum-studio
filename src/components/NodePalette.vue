@@ -44,7 +44,7 @@ const CATEGORY_ICON_STYLES: Record<NodeCategory, string> = {
 </script>
 
 <template>
-  <aside class="w-72 border-r border-white/5 bg-charcoal-800 flex flex-col">
+  <aside class="node-palette w-72 flex flex-col">
     <div class="px-4 py-3 border-b border-white/5 space-y-3">
       <div>
         <div class="text-[10px] font-bold tracking-widest text-emerald-500 uppercase">Palette</div>
@@ -58,7 +58,8 @@ const CATEGORY_ICON_STYLES: Record<NodeCategory, string> = {
         <input
           v-model="query"
           placeholder="Search nodes"
-          class="w-full pl-8 pr-2 py-1.5 bg-charcoal-900 border border-white/5 rounded-md text-xs focus:outline-none focus:border-emerald-500/40 transition" />
+          aria-label="Search nodes"
+          class="studio-input w-full pl-8 pr-2 py-2 text-xs" />
       </div>
     </div>
 
@@ -79,7 +80,7 @@ const CATEGORY_ICON_STYLES: Record<NodeCategory, string> = {
             :key="kind"
             :draggable="true"
             @dragstart="(e) => onDragStart(e, kind)"
-            class="group cursor-grab active:cursor-grabbing rounded-lg border border-white/5 bg-charcoal-900 hover:border-emerald-500/40 hover:bg-charcoal-900/60 transition flex items-start gap-2.5 p-2.5">
+            class="palette-item group cursor-grab active:cursor-grabbing rounded-xl flex items-start gap-2.5 p-2.5">
             <div
               class="w-8 h-8 rounded-md bg-charcoal-800 border border-white/5 flex items-center justify-center shrink-0 group-hover:border-emerald-500/30 transition"
               :class="CATEGORY_ICON_STYLES[cat]">

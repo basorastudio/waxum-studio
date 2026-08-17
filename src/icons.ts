@@ -27,6 +27,7 @@ import {
   BiArrowClockwise,
   BiXLg,
   BiLightningChargeFill,
+  BiExclamationTriangle,
 } from 'oh-vue-icons/icons'
 
 addIcons(
@@ -56,6 +57,7 @@ addIcons(
   BiArrowClockwise,
   BiXLg,
   BiLightningChargeFill,
+  BiExclamationTriangle,
 )
 
 export { OhVueIcon }

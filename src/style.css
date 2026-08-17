@@ -5,10 +5,184 @@
 @layer base {
   :root {
     color-scheme: dark;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-synthesis: none;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   }
   html, body, #app {
     height: 100%;
   }
+  body {
+    margin: 0;
+    background: #080d0b;
+    color: #f3f7f5;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, a, input {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :focus-visible {
+    outline: 2px solid rgba(52, 211, 153, 0.9);
+    outline-offset: 3px;
+  }
+}
+
+.studio-shell {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 18% -10%, rgba(16, 185, 129, 0.12), transparent 28rem),
+    radial-gradient(circle at 88% 8%, rgba(14, 165, 233, 0.06), transparent 24rem),
+    #080d0b;
+}
+
+.studio-shell::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  content: '';
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+.studio-header,
+.editor-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(8, 13, 11, 0.76);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+.hero-title {
+  max-width: 720px;
+  font-size: clamp(2.25rem, 5vw, 4.25rem);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.eyebrow {
+  color: #6ee7b7;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.status-pill,
+.save-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.035);
+  color: rgba(255,255,255,.52);
+  font-size: 0.68rem;
+  padding: .42rem .65rem;
+  border-radius: 999px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #34d399;
+  box-shadow: 0 0 0 3px rgba(52,211,153,.1);
+}
+
+.surface-card,
+.empty-surface {
+  border: 1px solid rgba(255,255,255,.07);
+  background: linear-gradient(145deg, rgba(18,28,24,.88), rgba(12,19,16,.92));
+  box-shadow: 0 18px 50px rgba(0,0,0,.12);
+}
+
+.surface-card {
+  transition: transform 180ms var(--ease-out), border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+.surface-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(52,211,153,.3);
+  box-shadow: 0 22px 56px rgba(0,0,0,.22), 0 0 0 1px rgba(52,211,153,.04);
+}
+
+.primary-button,
+.secondary-button,
+.card-action,
+.palette-item {
+  transition: transform 140ms var(--ease-out), color 160ms ease, background-color 160ms ease, border-color 160ms ease, opacity 160ms ease;
+}
+
+.primary-button {
+  color: #06110d;
+  background: #34d399;
+  box-shadow: inset 0 1px rgba(255,255,255,.35), 0 8px 24px rgba(16,185,129,.14);
+}
+
+.primary-button:hover { background: #6ee7b7; }
+.primary-button:active,
+.secondary-button:active,
+.card-action:active { transform: scale(.97); }
+
+.secondary-button {
+  color: rgba(255,255,255,.65);
+  border: 1px solid rgba(255,255,255,.07);
+  background: rgba(255,255,255,.035);
+}
+.secondary-button:hover { color: white; background: rgba(255,255,255,.065); }
+
+.studio-input {
+  border: 1px solid rgba(255,255,255,.075);
+  border-radius: .65rem;
+  outline: none;
+  color: #f3f7f5;
+  background: rgba(5,10,8,.68);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.studio-input::placeholder { color: rgba(255,255,255,.25); }
+.studio-input:focus {
+  border-color: rgba(52,211,153,.48);
+  background: rgba(5,10,8,.9);
+  box-shadow: 0 0 0 3px rgba(52,211,153,.08);
+}
+
+.modal-scrim {
+  background: rgba(1,5,3,.68);
+  backdrop-filter: blur(12px);
+}
+.modal-panel {
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(15,23,20,.96);
+  box-shadow: 0 30px 90px rgba(0,0,0,.5);
+  animation: modal-enter 200ms var(--ease-out) both;
+}
+@keyframes modal-enter {
+  from { opacity: 0; transform: translateY(8px) scale(.98); }
+}
+
+.node-palette {
+  border-right: 1px solid rgba(255,255,255,.065);
+  background: rgba(13,21,17,.94);
+}
+.palette-item {
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(6,12,9,.72);
+}
+.palette-item:hover {
+  transform: translateX(2px);
+  border-color: rgba(52,211,153,.28);
+  background: rgba(10,20,15,.92);
+}
+.workflow-node {
+  box-shadow: 0 16px 40px rgba(0,0,0,.3), inset 0 1px rgba(255,255,255,.04);
+  transition: box-shadow 180ms ease, transform 180ms var(--ease-out);
+}
+.vue-flow__node.selected .workflow-node {
+  box-shadow: 0 0 0 2px rgba(52,211,153,.42), 0 20px 48px rgba(0,0,0,.38);
 }
 
 /* Vue Flow overrides — emerald accent */
@@ -34,4 +208,20 @@
   background: #0e1512 !important;
   border: 1px solid rgba(16, 185, 129, 0.2) !important;
   border-radius: 8px !important;
+}
+
+@media (max-width: 760px) {
+  .status-pill { display: none; }
+  .node-palette { width: 14rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+  .surface-card:hover,
+  .palette-item:hover { transform: none; }
 }

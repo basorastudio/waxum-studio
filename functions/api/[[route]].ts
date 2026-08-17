@@ -13,6 +13,11 @@ const app = new Hono<{ Bindings: Env }>().basePath('/api')
 
 app.use('*', cors({ origin: '*', allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] }))
 
+app.get('/health', async (c) => {
+  const row = await c.env.DB.prepare('SELECT 1 AS ok').first<{ ok: number }>()
+  return c.json({ status: row?.ok === 1 ? 'ok' : 'degraded', database: 'd1-sqlite' })
+})
+
 // Ensure the flows table exists on first hit — cheap enough for a tiny app.
 async function ensureSchema(db: D1Database) {
   await db
