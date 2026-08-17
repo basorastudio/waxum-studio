@@ -47,6 +47,13 @@ Set the D1 database id in `wrangler.toml` after creating one:
 wrangler d1 create waxum-studio
 ```
 
+Local development persists flows in SQLite at `.data/waxum-studio.sqlite`.
+Override it with `STUDIO_DATABASE_PATH=/absolute/path/studio.sqlite`. The
+connection enables WAL mode, foreign keys, and a busy timeout for reliable
+concurrent saves. Cloudflare deployments use D1, Cloudflare's SQLite database.
+
+Database readiness is available at `GET /api/health` in both environments.
+
 ## Deploy
 
 Push to `main`. GitHub Actions runs `pnpm build` then

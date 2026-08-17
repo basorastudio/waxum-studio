@@ -12,9 +12,12 @@ import fs from 'node:fs'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.resolve(__dirname, '..', '.data')
 fs.mkdirSync(DATA_DIR, { recursive: true })
-const DB_PATH = path.join(DATA_DIR, 'waxum-studio.sqlite')
+const DB_PATH = path.resolve(process.env.STUDIO_DATABASE_PATH || path.join(DATA_DIR, 'waxum-studio.sqlite'))
+fs.mkdirSync(path.dirname(DB_PATH), { recursive: true })
 const db = new Database(DB_PATH)
 db.pragma('journal_mode = WAL')
+db.pragma('foreign_keys = ON')
+db.pragma('busy_timeout = 5000')
 db.exec(`CREATE TABLE IF NOT EXISTS flows (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
@@ -28,6 +31,11 @@ const WAXUM_API_BASE = process.env.WAXUM_API_BASE || 'https://waxum.imtaqin.id'
 const app = new Hono().basePath('/api')
 
 app.use('*', cors({ origin: '*', allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'] }))
+
+app.get('/health', (c) => {
+  const result = db.prepare('SELECT 1 AS ok').get() as { ok: number }
+  return c.json({ status: result.ok === 1 ? 'ok' : 'degraded', database: 'sqlite' })
+})
 
 app.get('/flows', (c) => {
   const rows = db

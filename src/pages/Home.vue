@@ -11,6 +11,7 @@ const query = ref('')
 const showCreate = ref(false)
 const newName = ref('')
 const creating = ref(false)
+const loadError = ref('')
 
 const filtered = computed(() =>
   flows.value.filter((f) => f.name.toLowerCase().includes(query.value.toLowerCase())),
@@ -18,11 +19,14 @@ const filtered = computed(() =>
 
 async function load() {
   loading.value = true
+  loadError.value = ''
   try {
     const res = await fetch('/api/flows')
-    flows.value = res.ok ? await res.json() : []
+    if (!res.ok) throw new Error('Unable to load workflows')
+    flows.value = await res.json()
   } catch {
     flows.value = []
+    loadError.value = 'Studio could not reach its SQLite workspace.'
   } finally {
     loading.value = false
   }
@@ -69,19 +73,23 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="min-h-full bg-charcoal-900">
-    <header class="border-b border-white/5 sticky top-0 z-10 backdrop-blur bg-charcoal-900/80">
+  <div class="studio-shell min-h-full bg-charcoal-900">
+    <header class="studio-header sticky top-0 z-10">
       <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <img src="/logo.png" alt="Waxum Studio" class="w-9 h-9" />
           <div>
-            <div class="text-[15px] font-bold tracking-tight leading-none">Waxum Studio</div>
-            <div class="text-[11px] text-white/40 mt-0.5 tracking-wider uppercase">
-              Visual WhatsApp Workflow Builder
+            <div class="text-[15px] font-semibold tracking-tight leading-none">Waxum Studio</div>
+            <div class="text-[10px] text-white/40 mt-1 tracking-[0.14em] uppercase">
+              Automation workspace
             </div>
           </div>
         </div>
         <div class="flex items-center gap-2">
+          <div class="status-pill" title="Local and Cloudflare persistence use SQLite">
+            <span class="status-dot"></span>
+            SQLite ready
+          </div>
           <a
             href="https://github.com/imtaqin/waxum-studio"
             target="_blank"
@@ -98,11 +106,19 @@ onMounted(load)
       </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-10">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <main class="relative max-w-6xl mx-auto px-6 py-12">
+      <div class="mb-10 max-w-2xl">
+        <div class="eyebrow">Workflow operations</div>
+        <h1 class="hero-title mt-3">Build automations that<br class="hidden sm:block" /> stay beautifully simple.</h1>
+        <p class="text-white/50 text-[15px] leading-7 mt-4 max-w-xl">
+          Design reliable WhatsApp journeys on a focused canvas, with every change saved automatically.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
         <div>
-          <h1 class="text-3xl font-bold tracking-tight">Flows</h1>
-          <p class="text-white/50 text-sm mt-1">Build, wire, and ship WhatsApp automations.</p>
+          <h2 class="text-base font-semibold tracking-tight">Your workflows</h2>
+          <p class="text-white/40 text-xs mt-1">{{ flows.length }} {{ flows.length === 1 ? 'workflow' : 'workflows' }} in this workspace</p>
         </div>
         <div class="flex items-center gap-2">
           <div class="relative">
@@ -113,30 +129,40 @@ onMounted(load)
             <input
               v-model="query"
               placeholder="Search flows"
-              class="pl-9 pr-3 py-2 bg-charcoal-800 border border-white/5 rounded-lg text-sm w-56 focus:outline-none focus:border-emerald-500/40 transition" />
+              aria-label="Search workflows"
+              class="studio-input pl-9 pr-3 py-2 text-sm w-56" />
           </div>
           <button
             @click="showCreate = true"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-charcoal-900 font-semibold text-sm transition">
+            class="primary-button inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm">
             <v-icon name="bi-plus-lg" scale="0.9" />
             <span>New flow</span>
           </button>
         </div>
       </div>
 
-      <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" aria-live="polite">
         <div
           v-for="i in 6"
           :key="i"
-          class="border border-white/5 rounded-xl p-5 bg-charcoal-800 animate-pulse">
+          class="surface-card rounded-xl p-5 animate-pulse">
           <div class="h-4 bg-white/5 rounded w-2/3 mb-3"></div>
           <div class="h-3 bg-white/5 rounded w-1/2"></div>
         </div>
       </div>
 
+      <div v-else-if="loadError" class="empty-surface rounded-2xl p-12 text-center">
+        <div class="inline-flex w-12 h-12 rounded-2xl bg-red-400/10 items-center justify-center mb-4 text-red-300">
+          <v-icon name="bi-exclamation-triangle" scale="1.35" />
+        </div>
+        <div class="text-base font-semibold mb-1">Workspace unavailable</div>
+        <div class="text-white/45 text-sm mb-5">{{ loadError }}</div>
+        <button @click="load" class="secondary-button px-4 py-2 rounded-lg text-sm">Try again</button>
+      </div>
+
       <div
         v-else-if="!flows.length"
-        class="border border-dashed border-white/10 rounded-2xl p-16 text-center bg-charcoal-800/50">
+        class="empty-surface rounded-2xl p-16 text-center">
         <div class="inline-flex w-14 h-14 rounded-2xl bg-emerald-500/10 items-center justify-center mb-4">
           <v-icon name="bi-lightning-charge-fill" scale="1.8" class="text-emerald-500" />
         </div>
@@ -146,25 +172,26 @@ onMounted(load)
         </div>
         <button
           @click="showCreate = true"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-charcoal-900 font-semibold text-sm transition">
+          class="primary-button inline-flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm">
           <v-icon name="bi-plus-lg" scale="0.9" />
           <span>Create your first flow</span>
         </button>
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div v-else-if="filtered.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <router-link
           v-for="f in filtered"
           :key="f.id"
           :to="`/flow/${f.id}`"
-          class="group relative block border border-white/5 rounded-xl p-5 bg-charcoal-800 hover:border-emerald-500/40 hover:bg-charcoal-800/80 transition">
+          class="surface-card group relative block rounded-xl p-5">
           <div class="flex items-start justify-between">
             <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
               <v-icon name="bi-diagram3" scale="1.1" />
             </div>
             <button
               @click="(e) => remove(f.id, e)"
-              class="opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-white/40 hover:text-red-400 hover:bg-white/5 transition">
+              :aria-label="`Delete ${f.name}`"
+              class="card-action opacity-0 group-hover:opacity-100 focus:opacity-100 p-1.5 rounded-md text-white/40 hover:text-red-400 hover:bg-white/5">
               <v-icon name="bi-trash" scale="0.9" />
             </button>
           </div>
@@ -176,21 +203,29 @@ onMounted(load)
           </div>
         </router-link>
       </div>
+      <div v-else class="empty-surface rounded-2xl p-12 text-center">
+        <div class="text-base font-semibold">No matching workflows</div>
+        <div class="text-white/45 text-sm mt-1">Try a different name or clear your search.</div>
+        <button @click="query = ''" class="secondary-button px-4 py-2 rounded-lg text-sm mt-5">Clear search</button>
+      </div>
     </main>
 
     <!-- create modal -->
     <div
       v-if="showCreate"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      class="modal-scrim fixed inset-0 z-50 flex items-center justify-center px-4"
       @click.self="showCreate = false">
       <div
-        class="bg-charcoal-800 border border-white/10 rounded-2xl w-full max-w-md p-6 shadow-xl">
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-flow-title"
+        class="modal-panel rounded-2xl w-full max-w-md p-6">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
               <v-icon name="bi-file-earmark-plus" scale="1" />
             </div>
-            <div class="font-semibold">New flow</div>
+            <div id="new-flow-title" class="font-semibold">New workflow</div>
           </div>
           <button
             @click="showCreate = false"
@@ -203,18 +238,18 @@ onMounted(load)
           v-model="newName"
           @keyup.enter="create"
           placeholder="Untitled flow"
-          class="w-full px-3 py-2.5 bg-charcoal-900 border border-white/5 rounded-lg text-sm focus:outline-none focus:border-emerald-500/40 transition"
+          class="studio-input w-full px-3 py-2.5 text-sm"
           autofocus />
         <div class="flex justify-end gap-2 mt-6">
           <button
             @click="showCreate = false"
-            class="px-4 py-2 rounded-lg text-sm text-white/60 hover:bg-white/5 transition">
+            class="secondary-button px-4 py-2 rounded-lg text-sm">
             Cancel
           </button>
           <button
             @click="create"
             :disabled="creating || !newName.trim()"
-            class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed text-charcoal-900 font-semibold text-sm transition">
+            class="primary-button px-4 py-2 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-sm">
             {{ creating ? 'Creating…' : 'Create' }}
           </button>
         </div>

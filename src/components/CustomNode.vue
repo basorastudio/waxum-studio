@@ -39,7 +39,7 @@ const CATEGORY_STYLES: Record<NodeCategory, { bg: string; border: string; icon: 
 
 <template>
   <div
-    class="min-w-[220px] rounded-xl border bg-charcoal-800 shadow-lg overflow-hidden"
+    class="workflow-node min-w-[220px] rounded-xl border bg-charcoal-800 overflow-hidden"
     :class="[CATEGORY_STYLES[data.category].border]">
     <Handle type="target" :position="Position.Left" />
     <div class="flex items-center gap-2.5 px-3 py-2.5 border-b border-white/5">
