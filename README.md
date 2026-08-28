@@ -60,6 +60,26 @@ Push to `main`. GitHub Actions runs `pnpm build` then
 `wrangler pages deploy dist`. Requires `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID` in repo secrets.
 
+## Self-host (Docker Compose)
+
+Skip Cloudflare entirely — the Node/Hono/`better-sqlite3` dev server also
+serves the built frontend when `SERVE_STATIC=true`, so one container is the
+whole app:
+
+```bash
+git clone https://github.com/imtaqin/waxum-studio.git
+cd waxum-studio
+docker compose up -d
+```
+
+Open `http://localhost:8787`. Flows persist in the `studio_data` volume.
+Point it at your own Waxum instance with `WAXUM_API_BASE` (defaults to
+`https://waxum.imtaqin.id`):
+
+```bash
+WAXUM_API_BASE=http://my-waxum-host:3451 docker compose up -d
+```
+
 ## Roadmap
 
 - Trigger sources: webhook, incoming message, cron

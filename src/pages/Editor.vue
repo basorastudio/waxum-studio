@@ -14,7 +14,7 @@ import { NODE_CATALOG, type NodeKind } from '@/nodes/catalog'
 
 const props = defineProps<{ id: string }>()
 
-const { addNodes, onConnect, addEdges, toObject } = useVueFlow()
+const { addNodes, onConnect, addEdges, toObject, screenToFlowCoordinate } = useVueFlow()
 const nodes = ref<any[]>([])
 const edges = ref<any[]>([])
 const saving = ref(false)
@@ -59,6 +59,11 @@ function scheduleSave() {
   saveTimer = setTimeout(save, 800)
 }
 
+function dragover(e: DragEvent) {
+  e.preventDefault()
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+}
+
 function drop(e: DragEvent) {
   e.preventDefault()
   const kind = e.dataTransfer?.getData('waxum/node') as NodeKind | undefined
@@ -69,7 +74,7 @@ function drop(e: DragEvent) {
   addNodes({
     id,
     type: 'waxum',
-    position: { x: e.clientX - 360, y: e.clientY - 100 },
+    position: screenToFlowCoordinate({ x: e.clientX, y: e.clientY }),
     data: {
       kind,
       label: meta.label,
@@ -130,7 +135,7 @@ watch([nodes, edges], () => scheduleSave(), { deep: true })
       <div
         class="flex-1 relative"
         @drop="drop"
-        @dragover.prevent>
+        @dragover="dragover">
         <VueFlow
           v-model:nodes="nodes"
           v-model:edges="edges"

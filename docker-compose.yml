@@ -1,0 +1,13 @@
+services:
+  studio:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - studio_data:/app/.data
+    environment:
+      WAXUM_API_BASE: ${WAXUM_API_BASE:-https://waxum.imtaqin.id}
+
+volumes:
+  studio_data:
