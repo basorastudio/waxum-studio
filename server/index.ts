@@ -1,7 +1,11 @@
-// Local dev server. Node + Hono + better-sqlite3. Runs on http://localhost:8787.
-// Same route shape as the Cloudflare Pages Functions handler in `functions/api/`,
-// so the Vue app doesn't care which backend it is talking to.
+// Node + Hono + better-sqlite3. Doubles as the self-host server: same route
+// shape as the Cloudflare Pages Functions handler in `functions/api/`, so the
+// Vue app doesn't care which backend it is talking to. In dev, only the API
+// runs here (Vite serves the frontend on its own port); in the Docker image,
+// SERVE_STATIC=true also serves the built `dist/` with SPA fallback so one
+// container is the whole app.
 import { serve } from '@hono/node-server'
+import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import Database from 'better-sqlite3'
@@ -119,7 +123,16 @@ app.post('/waxum/call', async (c) => {
   })
 })
 
+// `app` above is `.basePath('/api')`; static routes need to live outside
+// that prefix, so they're registered on a top-level app that mounts `app`.
+const root = new Hono()
+root.route('/', app)
+if (process.env.SERVE_STATIC === 'true') {
+  root.use('/*', serveStatic({ root: 'dist' }))
+  root.get('*', serveStatic({ path: 'dist/index.html' }))
+}
+
 const PORT = Number(process.env.PORT || 8787)
-serve({ fetch: app.fetch, port: PORT })
+serve({ fetch: root.fetch, port: PORT })
 console.log(`[waxum-studio api] listening on http://localhost:${PORT}`)
 console.log(`[waxum-studio api] db: ${DB_PATH}`)
