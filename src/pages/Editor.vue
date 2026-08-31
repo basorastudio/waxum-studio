@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { VueFlow, useVueFlow, Position } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
@@ -10,16 +10,26 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/minimap/dist/style.css'
 import NodePalette from '@/components/NodePalette.vue'
 import CustomNode from '@/components/CustomNode.vue'
+import NodeConfigPanel from '@/components/NodeConfigPanel.vue'
 import { NODE_CATALOG, type NodeKind } from '@/nodes/catalog'
 
 const props = defineProps<{ id: string }>()
 
-const { addNodes, onConnect, addEdges, toObject, screenToFlowCoordinate } = useVueFlow()
+const { addNodes, onConnect, addEdges, toObject, screenToFlowCoordinate, onNodeClick, onPaneClick, findNode } =
+  useVueFlow()
 const nodes = ref<any[]>([])
 const edges = ref<any[]>([])
 const saving = ref(false)
 const savedRecently = ref(false)
 const flowName = ref('')
+const selectedNodeId = ref<string | null>(null)
+const selectedNode = computed(() => (selectedNodeId.value ? findNode(selectedNodeId.value) : null))
+
+function updateSelectedNodeConfig(key: string, value: unknown) {
+  const node = selectedNode.value
+  if (!node) return
+  node.data = { ...node.data, config: { ...node.data.config, [key]: value } }
+}
 
 interface LoadedFlow {
   name?: string
@@ -90,6 +100,9 @@ function drop(e: DragEvent) {
 
 onConnect((params) => addEdges([{ ...params, animated: true }]))
 
+onNodeClick(({ node }) => (selectedNodeId.value = node.id))
+onPaneClick(() => (selectedNodeId.value = null))
+
 onMounted(load)
 
 watch([nodes, edges], () => scheduleSave(), { deep: true })
@@ -148,5 +161,7 @@ watch([nodes, edges], () => scheduleSave(), { deep: true })
         </VueFlow>
       </div>
     </div>
+
+    <NodeConfigPanel v-if="selectedNode" :node="selectedNode" @close="selectedNodeId = null" @update="updateSelectedNodeConfig" />
   </div>
 </template>
